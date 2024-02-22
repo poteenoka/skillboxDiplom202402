@@ -27,10 +27,10 @@ func ValidateSMSVbs(s entity.SMSData) error {
 
 }
 
-func (s *SmsService) SetData(data interface{}) error {
+func (s *SmsService) SetData(data []byte) error {
 	return s.repo.SetData(data)
 }
 
-func (s *SmsService) GetContent(path string) ([]string, error) {
+func (s *SmsService) GetContent(path byte) ([]string, error) {
 	return s.repo.GetContent(path)
 }

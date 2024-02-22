@@ -1,7 +1,6 @@
 package repo
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/skillboxDiplom202402/internal/entity"
@@ -29,7 +28,7 @@ func (s *MMSLocalstorage) Print() {
 	}
 }
 
-func (s *MMSLocalstorage) GetContent(path string) (*entity.MMSData, error) {
+func (s *MMSLocalstorage) GetContent(path string) ([]byte, error) {
 
 	resp, err := http.Get(path)
 
@@ -45,9 +44,8 @@ func (s *MMSLocalstorage) GetContent(path string) (*entity.MMSData, error) {
 	defer resp.Body.Close()
 	body, err := io.ReadAll(resp.Body)
 
-	err = json.Unmarshal(body, &s.Mms)
 	if err != nil {
-		log.Println(err)
+		return body, nil
 	}
 
 	//for i, v := range s.Mms {
@@ -60,6 +58,6 @@ func (s *MMSLocalstorage) GetContent(path string) (*entity.MMSData, error) {
 
 }
 
-func (s *MMSLocalstorage) SetData(*entity.MMSData) error {
+func (s *MMSLocalstorage) SetData([]byte) error {
 	return nil
 }

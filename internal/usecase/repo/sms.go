@@ -1,7 +1,6 @@
 package repo
 
 import (
-	"bufio"
 	"fmt"
 	"github.com/skillboxDiplom202402/internal/entity"
 	"github.com/skillboxDiplom202402/internal/usecase"
@@ -29,7 +28,7 @@ func NewSMSLocalstorage() *SMSLocalstorage {
 	}
 }
 
-func (s *SMSLocalstorage) GetContent(path string) ([]string, error) {
+func (s *SMSLocalstorage) GetContent(path string) ([]byte, error) {
 	_, err := os.Stat(path)
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -42,12 +41,14 @@ func (s *SMSLocalstorage) GetContent(path string) ([]string, error) {
 		return nil, err
 	}
 	defer file.Close()
+	/*
+		var rows []string
+		sc := bufio.NewScanner(file)
 
-	var rows []string
-	sc := bufio.NewScanner(file)
-	for sc.Scan() {
-		rows = append(rows, sc.Text())
-	}
+		for sc.Scan() {
+			rows = append(rows, sc.Text())
+		}*/
+
 	return rows, nil
 
 }
