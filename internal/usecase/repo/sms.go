@@ -1,11 +1,11 @@
 package repo
 
 import (
+	"bufio"
+	"bytes"
 	"fmt"
 	"github.com/skillboxDiplom202402/internal/entity"
-	"github.com/skillboxDiplom202402/internal/usecase"
-	"log"
-	"os"
+	"io/ioutil"
 	"strings"
 )
 
@@ -29,35 +29,24 @@ func NewSMSLocalstorage() *SMSLocalstorage {
 }
 
 func (s *SMSLocalstorage) GetContent(path string) ([]byte, error) {
-	_, err := os.Stat(path)
+
+	// Считываем CSV-файл в []byte
+	data, err := ioutil.ReadFile(path)
 	if err != nil {
-		if os.IsNotExist(err) {
-			log.Println("file does not exist")
-			return nil, err
-		}
-	}
-	file, err := os.Open(path)
-	if err != nil {
+		fmt.Println("Ошибка чтения файла:", err)
 		return nil, err
 	}
-	defer file.Close()
-	/*
-		var rows []string
-		sc := bufio.NewScanner(file)
 
-		for sc.Scan() {
-			rows = append(rows, sc.Text())
-		}*/
-
-	return rows, nil
-
+	return data, nil
 }
 
-func (s *SMSLocalstorage) SetData(data []string) error {
+func (s *SMSLocalstorage) SetData(data []byte) error {
 
-	for _, row := range data {
-		spliArr := strings.Split(row, ";")
+	buffer := bytes.NewBuffer(data)
 
+	scanner := bufio.NewScanner(buffer)
+	for scanner.Scan() {
+		spliArr := strings.Split(scanner.Text(), ";")
 		//слайс должен быть длинной 4
 		if len(spliArr) != 4 {
 			continue
@@ -69,11 +58,16 @@ func (s *SMSLocalstorage) SetData(data []string) error {
 			Provider:     spliArr[3],
 		}
 
-		if usecase.ValidateSMSVbs(sms) != nil {
+		if entity.ValidateSMSVbs(sms) != nil {
 			continue
 		}
-
 		s.Sms = append(s.Sms, &sms)
 	}
+
+	if err := scanner.Err(); err != nil {
+		fmt.Println("Ошибка чтения строк:", err)
+		return err
+	}
+
 	return nil
 }

@@ -10,10 +10,10 @@ func NewMmsService(repo csvReader) *MmsService {
 	}
 }
 
-func (s *MmsService) SetData(data []string) error {
+func (s *MmsService) SetData(data []byte) error {
 	return s.repo.SetData(data)
 }
 
-func (s *MmsService) GetContent(path string) ([]string, error) {
+func (s *MmsService) GetContent(path string) ([]byte, error) {
 	return s.repo.GetContent(path)
 }

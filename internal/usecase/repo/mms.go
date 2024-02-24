@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/skillboxDiplom202402/internal/entity"
@@ -31,20 +32,20 @@ func (s *MMSLocalstorage) Print() {
 func (s *MMSLocalstorage) GetContent(path string) ([]byte, error) {
 
 	resp, err := http.Get(path)
-
 	if err != nil {
 		log.Println(err)
 		log.Println("ощибка  ", path)
 	}
+
 	if resp.StatusCode != 200 {
-		log.Println("Status code is not 200, error is occured")
-		return nil, errors.New("Status code is not 200, error is occured")
+		log.Printf("Error http req: %d", resp.StatusCode)
+		return nil, errors.New(resp.Status)
 	}
 
 	defer resp.Body.Close()
 	body, err := io.ReadAll(resp.Body)
 
-	if err != nil {
+	if err == nil {
 		return body, nil
 	}
 
@@ -54,10 +55,23 @@ func (s *MMSLocalstorage) GetContent(path string) ([]byte, error) {
 	//	}
 	//}
 
-	return nil, nil
+	return nil, errors.New("что-то пошло не так")
 
 }
 
-func (s *MMSLocalstorage) SetData([]byte) error {
+func (s *MMSLocalstorage) SetData(body []byte) error {
+	var mmsBuf []entity.MMSData
+
+	err := json.Unmarshal(body, &mmsBuf)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	for _, v := range mmsBuf {
+		if v.ValidateMMSdata() == nil {
+			s.Mms = append(s.Mms, &v)
+		}
+	}
 	return nil
 }
