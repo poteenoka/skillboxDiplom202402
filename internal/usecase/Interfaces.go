@@ -6,6 +6,8 @@ type csvReader interface {
 	GetContent(path string) ([]byte, error)
 }
 
-//type getFileContent interface {
-//	getFileContent(path string) ([]string, error)
-//}
+type EntityData interface {
+	SetCountry(new string)
+	GetCountry() string
+	GetProvider() string
+}

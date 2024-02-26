@@ -68,10 +68,14 @@ func (s *MMSLocalstorage) SetData(body []byte) error {
 		return err
 	}
 
-	for _, v := range mmsBuf {
+	//////   НЕ понятно!!! почему если i пропустить и добавлять в срез &v - то всегда добавляется первый элемент массива mmsBuf  ////
+
+	for i, v := range mmsBuf {
 		if v.ValidateMMSdata() == nil {
-			s.Mms = append(s.Mms, &v)
+			fmt.Println()
+			s.Mms = append(s.Mms, &mmsBuf[i])
 		}
 	}
+
 	return nil
 }
