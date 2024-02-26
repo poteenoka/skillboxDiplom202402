@@ -6,7 +6,7 @@ type ResiultLocalstorage struct {
 	ResultT *entity.ResultT
 }
 
-func NewResultLocalstorage() *ResiultLocalstorage {
+/*func NewResultLocalstorage() *ResiultLocalstorage {
 	return &ResiultLocalstorage{
 		ResultT: &entity.ResultT{
 			Status: false,
@@ -23,3 +23,4 @@ func NewResultLocalstorage() *ResiultLocalstorage {
 		},
 	}
 }
+*/

@@ -92,11 +92,6 @@ func GetResultData() (t entity.ResultSetT, err error) {
 	dataMMS := <-chanDataMMS
 	fmt.Println("MMS DATA:...", dataMMS)
 
-	chanDataVoice := make(chan []*entity.VoiceData, 1)
-	prepareVoice(repoVoice.Voice, chanDataVoice)
-	dataVoice := <-chanDataVoice
-	fmt.Println("Voice DATA:...", dataVoice)
-
 	chanDataEmail := make(chan map[string][][]entity.EmailData, 1)
 	prepareEmailData(repoEmail, chanDataEmail)
 	dataEmail := <-chanDataEmail
@@ -116,9 +111,9 @@ func GetResultData() (t entity.ResultSetT, err error) {
 	data := entity.ResultSetT{
 		SMS:       sortedSms,
 		MMS:       dataMMS,
-		VoiceCall: dataVoice,
+		VoiceCall: repoVoice.Voice,
 		Email:     dataEmail,
-		Billing:   repoBilling.Billing,
+		Billing:   *repoBilling.Billing,
 		Support:   dataSupport,
 		Incidents: dataIncidents,
 	}
@@ -153,7 +148,7 @@ func sortCountry(list []usecase.EntityData) []usecase.EntityData {
 	return list
 }
 
-func prepareVoice(list []*entity.VoiceData, ch chan []*entity.VoiceData) {
+func prepareVoice(list []entity.VoiceData, ch chan []entity.VoiceData) {
 	ch <- list
 }
 
