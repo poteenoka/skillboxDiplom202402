@@ -79,7 +79,7 @@ func AppRun() {
 
 	GetResultData()
 
-	router.HandleFunc("/", HandleConnection)
+	router.HandleFunc("/api", HandleConnection)
 	srv := &http.Server{
 		Addr:    "localhost:8282",
 		Handler: router,
