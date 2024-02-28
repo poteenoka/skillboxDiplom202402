@@ -49,6 +49,8 @@ func GetResultData() (t entity.ResultSetT, err error) {
 	}
 	usecaseMms.SetData(mmsCSV)
 
+	repoMms.Print()
+
 	usecaseVoice := usecase.NewVoiceService(repoVoice)
 	VoiceCSV, err := usecaseVoice.GetContent(pathvoiceDatafile)
 	if err != nil {
@@ -62,7 +64,7 @@ func GetResultData() (t entity.ResultSetT, err error) {
 		return entity.ResultSetT{}, err
 	}
 	usecaseEmail.SetData(emailCSV)
-	repoEmail.Print()
+	//repoEmail.Print()
 
 	usecaseBilling := usecase.NewVoiceService(repoBilling)
 	billingCSV, err := usecaseBilling.GetContent(pathbillingDatafile)
@@ -108,7 +110,7 @@ func GetResultData() (t entity.ResultSetT, err error) {
 	chanDataIncident := make(chan []*entity.IncedentData, 1)
 	prepareIncidentData(repoIncedent, chanDataIncident)
 	dataIncidents := <-chanDataIncident
-	fmt.Println(dataIncidents[0])
+	//fmt.Println(dataIncidents[0])
 
 	data := entity.ResultSetT{
 		SMS:       sortedSms,
