@@ -114,7 +114,7 @@ func GetResultData() (t entity.ResultSetT, err error) {
 	data := entity.ResultSetT{
 		SMS:       sortedSms,
 		MMS:       dataMMS,
-		VoiceCall: repoVoice.Voice,
+		VoiceCall: *repoVoice.Voice,
 		Email:     dataEmail,
 		Billing:   *repoBilling.Billing,
 		Support:   dataSupport,
