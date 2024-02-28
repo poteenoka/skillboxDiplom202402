@@ -1,7 +1,6 @@
 package app
 
 import (
-	"fmt"
 	"github.com/biter777/countries"
 	"github.com/skillboxDiplom202402/internal/entity"
 	"github.com/skillboxDiplom202402/internal/usecase"
@@ -89,23 +88,23 @@ func GetResultData() (t entity.ResultSetT, err error) {
 	usecaseIncedent.SetData(incedentCSV)
 
 	sortedSms := prepareSMSdata(repoSms)
-	fmt.Println(sortedSms)
+	//fmt.Println(sortedSms)
 
 	chanDataMMS := make(chan [][]entity.MMSData, 1)
 	prepareMMSdata(repoMms, chanDataMMS)
 	dataMMS := <-chanDataMMS
-	fmt.Println("MMS DATA:...", dataMMS)
+	//fmt.Println("MMS DATA:...", dataMMS)
 
 	chanDataEmail := make(chan map[string][][]entity.EmailData, 1)
 	prepareEmailData(repoEmail, chanDataEmail)
 	dataEmail := <-chanDataEmail
 
-	fmt.Println("Email Data:...", dataEmail)
+	//fmt.Println("Email Data:...", dataEmail)
 
 	chanDataSupport := make(chan []int, 1)
 	prepareSupportData(repoSupport, chanDataSupport)
 	dataSupport := <-chanDataSupport
-	fmt.Println(dataSupport)
+	//fmt.Println(dataSupport)
 
 	chanDataIncident := make(chan []*entity.IncedentData, 1)
 	prepareIncidentData(repoIncedent, chanDataIncident)
