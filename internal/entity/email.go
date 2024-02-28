@@ -2,6 +2,7 @@ package entity
 
 import (
 	"errors"
+	"github.com/biter777/countries"
 	"golang.org/x/text/language"
 )
 
@@ -25,4 +26,13 @@ func (s *EmailData) ValidateEmailData() error {
 		}
 	}
 	return errors.New("Not valid")
+}
+
+func (s *EmailData) ReplaceCode() {
+	all := countries.AllInfo()
+	for _, country := range all {
+		if s.Country == country.Alpha2 {
+			s.Country = country.Name
+		}
+	}
 }

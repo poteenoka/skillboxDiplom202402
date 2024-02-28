@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+	"github.com/biter777/countries"
 	"github.com/skillboxDiplom202402/internal/entity"
 	"github.com/skillboxDiplom202402/internal/usecase"
 	"github.com/skillboxDiplom202402/internal/usecase/repo"
@@ -61,6 +62,7 @@ func GetResultData() (t entity.ResultSetT, err error) {
 		return entity.ResultSetT{}, err
 	}
 	usecaseEmail.SetData(emailCSV)
+	repoEmail.Print()
 
 	usecaseBilling := usecase.NewVoiceService(repoBilling)
 	billingCSV, err := usecaseBilling.GetContent(pathbillingDatafile)
@@ -183,7 +185,6 @@ func prepareSMSdata(list *repo.SMSLocalstorage) [][]entity.SMSData {
 		sliceSMS1, // second slice
 		sliceSMS2, //first slice
 	}
-
 }
 
 func prepareMMSdata(list *repo.MMSLocalstorage, ch chan [][]entity.MMSData) {
@@ -217,13 +218,23 @@ func prepareMMSdata(list *repo.MMSLocalstorage, ch chan [][]entity.MMSData) {
 
 func prepareEmailData(list *repo.EmailLocalstorage, ch chan map[string][][]entity.EmailData) {
 	result := make(map[string][][]entity.EmailData)
-	CountryProvider := make(map[string][]entity.EmailData)
+	countryProvider := make(map[string][]entity.EmailData)
+
+	//data.Country - поенять на имя
+
+	all := countries.AllInfo()
+	var cityname string
 
 	for _, data := range list.Email {
-		CountryProvider[data.Country] = append(CountryProvider[data.Country], *data)
+		for _, country := range all {
+			if data.Country == country.Alpha2 {
+				cityname = country.Name
+			}
+		}
+		countryProvider[cityname] = append(countryProvider[cityname], *data)
 	}
 
-	for country, provider := range CountryProvider {
+	for country, provider := range countryProvider {
 		sorted := sortMinMax(provider)
 		result[country] = sorted
 	}
@@ -241,10 +252,12 @@ func sortMinMax(list []entity.EmailData) (result [][]entity.EmailData) {
 	}
 
 	//resultSort := sortDelivery(list.Email)
+
 	min3 := make([]entity.EmailData, 3)
 	max3 := make([]entity.EmailData, 3)
 	min3 = list[:3]
 	max3 = list[len(list)-3:]
+
 	result = [][]entity.EmailData{
 		min3,
 		max3,

@@ -17,6 +17,7 @@ type EmailLocalstorage struct {
 func (s *EmailLocalstorage) Print() {
 	for _, EmailData := range s.Email {
 		fmt.Println(EmailData)
+		fmt.Println("-------", EmailData.Country)
 	}
 }
 
